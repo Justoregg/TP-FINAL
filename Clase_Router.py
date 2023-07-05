@@ -4,10 +4,11 @@ import csv
 
 class Router:
     
-    def __init__(self, posicion):
+    def __init__(self, posicion, latencia = 0.1):
         self.estado = "AGREGADO"
         self.posicion = posicion
-        self.paquetes_en_cola = []
+        self.paquetes_en_cola = []  # Habría que usar una lista enlazada o algo del estilo
+        self.latencia = latencia
         
     def enviar_paquete (self, contenido):
         """Input: Objeto router, Contenido del mensaje (String)\n
@@ -16,7 +17,21 @@ class Router:
         if self.estado == "ACTIVO":
             paquete = Paquete(mensaje = contenido)
             self.paquetes_en_cola.append(paquete)
-       
+    
+    def activar_router (self):
+        """Input: Objeto router\n
+        Funcion: Cambiar el estado del router a activo\n
+        Output: Nada"""
+        if self.estado != "ACTIVO":
+            self.estado = "ACTIVO"
+            
+    def deactivar_router (self):
+        """Input: Objeto router\n
+        Funcion: Cambiar el estado del router a inactivo\n
+        Output: Nada"""
+        if self.estado != "INACTIVO":
+            self.estado = "INACTIVO"
+            
     def procesar_paquete (self):
         """Input: Objeto router\n
         Funcion: Procesar un paquete de informacion\n
