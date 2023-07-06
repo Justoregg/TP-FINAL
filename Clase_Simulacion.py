@@ -19,7 +19,7 @@ class Routing_Sim:
         """Input: Objeto simulacion, destino final del mensaje (Int), mensaje (String), origen del mensaje (Int)\n
         Funcion: Iniciar la simulacion del programa\n
         Output: Nada"""
-        inicio = datetime.now()
+        inicio = time.time()
         for nodo in range(origen, destino_final):
             nuevo_paquete = mensaje
             self.routers[nodo].enviar_paquete(nuevo_paquete)
@@ -30,9 +30,9 @@ class Routing_Sim:
                     Router.actualizar_csv("ACTIVO", "System_log.csv", router.posicion)
                 elif router.posicion == destino_final:
                     Routing_Sim.ver_paquete(destino_final, mensaje, origen)
-        fin = datetime.now()
-        tiempo_simulado = (fin-inicio).total_seconds() # Con esto habria que hacer que el tiempo de la simulacion sea el ingresado como parametro
-        
+        while (time.time() - inicio) < self.tiempo_a_simular:
+            continue
+         
     @staticmethod
     def ver_paquete (destino, mensaje, origen):
         """Input: Destino del mensaje (Int), mensaje (String), origen del mensaje (Int)\n

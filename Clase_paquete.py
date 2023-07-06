@@ -1,5 +1,6 @@
 class Paquete:
-    def __init__(self, mensaje):
+    def __init__(self, mensaje, origen, destino):
         self.mensaje = mensaje
-    
-    # Metadata...
+        self.origen = origen
+        self.destino = destino
+        

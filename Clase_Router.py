@@ -1,21 +1,23 @@
 from Clase_paquete import *
 from datetime import *
+import time
 import csv
+import random 
 
 class Router:
     
-    def __init__(self, posicion, latencia = 0.1):
+    def __init__(self, posicion):
         self.estado = "AGREGADO"
         self.posicion = posicion
         self.paquetes_en_cola = []  # Habría que usar una lista enlazada o algo del estilo
-        self.latencia = latencia
+        self.latencia = 0 
         
-    def enviar_paquete (self, contenido):
+    def enviar_paquete (self, contenido, origen, destino):
         """Input: Objeto router, Contenido del mensaje (String)\n
         Funcion: Enviar un paquete de informacion con el mensaje deseado al proximo nodo\n
         Output: Nada"""
         if self.estado == "ACTIVO":
-            paquete = Paquete(mensaje = contenido)
+            paquete = Paquete(contenido, origen, destino)
             self.paquetes_en_cola.append(paquete)
     
     def activar_router (self):
@@ -31,22 +33,36 @@ class Router:
         Output: Nada"""
         if self.estado != "INACTIVO":
             self.estado = "INACTIVO"
-            
+    
+    def resetear_router (self):
+        """Input: Objeto router\n
+        Funcion: Resetear un router\n
+        Output: Nada"""
+        self.latencia = random.randint(5,10)
+    
+    def recibir_paquete (self, paquete):
+        """Input: Objeto router, paquete de informacion\n
+        Funcion: Recibir un paquete\n
+        Output: Nada"""
+        self.paquetes_en_cola.append(paquete)
+               
     def procesar_paquete (self):
         """Input: Objeto router\n
         Funcion: Procesar un paquete de informacion\n
         Output: True/Nada"""
         if self.estado == "ACTIVO":
-            for paquete in self.paquetes_en_cola:
-                if paquete["destino"] == self.posicion:
+            if self.latencia > 0: 
+                self.latencia -=1
+            elif self.paquetes_en_cola:
+                paquete = self.paquetes_en_cola.pop(0)
+                time.sleep(1) # Con esto hacemos la latencia
+                if paquete.destino == self.posicion:
                     return True
                 else:
                     self.enviar_paquete(paquete)
-            self.paquetes_en_cola = []
-        else:
-            # Acá habría que agregar toda la parte de la reparacion de nodos y los nodos inactivos...
-            pass
-        
+                    proximo_router = routers[self.posicion + 1]
+                    proximo_router.recibir_paquete(paquete)
+                    
     @staticmethod
     def actualizar_csv (estado, archivo, posicion):
         """Input: Estado del router (String), Archivo csv, Posicion del router (Int)\n
@@ -65,3 +81,4 @@ class Router:
         Output: Nada"""
         with open(f"router_{posicion_llegada}.txt", "a") as file:
             file.write(f"Origen: ROUTER_{posicion_origen}\n{mensaje}\n")
+
