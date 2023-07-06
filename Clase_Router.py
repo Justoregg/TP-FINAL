@@ -8,18 +8,9 @@ class Router:
     
     def __init__(self, posicion):
         self.estado = "AGREGADO"
-        self.posicion = posicion
-        self.paquetes_en_cola = []  # Habría que usar una lista enlazada o algo del estilo
+        self.posicion = posicion 
         self.latencia = 0 
-        
-    def enviar_paquete (self, contenido, origen, destino):
-        """Input: Objeto router, Contenido del mensaje (String)\n
-        Funcion: Enviar un paquete de informacion con el mensaje deseado al proximo Router\n
-        Output: Nada"""
-        if self.estado == "ACTIVO":
-            paquete = Paquete(contenido, origen, destino)
-            self.paquetes_en_cola.append(paquete)
-    
+              
     def activar_router (self):
         """Input: Objeto router\n
         Funcion: Cambiar el estado del router a activo\n
@@ -39,29 +30,6 @@ class Router:
         Funcion: Resetear un router\n
         Output: Nada"""
         self.latencia = random.randint(5,10)
-    
-    def recibir_paquete (self, paquete):
-        """Input: Objeto router, paquete de informacion\n
-        Funcion: Recibir un paquete\n
-        Output: Nada"""
-        self.paquetes_en_cola.append(paquete)
-               
-    def procesar_paquete (self):
-        """Input: Objeto router\n
-        Funcion: Procesar un paquete de informacion\n
-        Output: True/Nada"""
-        if self.estado == "ACTIVO":
-            if self.latencia > 0: 
-                self.latencia -=1
-            elif self.paquetes_en_cola:
-                paquete = self.paquetes_en_cola.pop(0)
-                time.sleep(0,1) # Con esto hacemos la latencia
-                if paquete.destino == self.posicion:
-                    return True
-                else:
-                    self.enviar_paquete(paquete)
-                    proximo_router = routers[self.posicion + 1]    ## La lista de routers esta en simulacion, por eso el error
-                    proximo_router.recibir_paquete(paquete)
                     
     @staticmethod
     def actualizar_csv (estado, archivo, posicion):
@@ -81,48 +49,71 @@ class Router:
         Output: Nada"""
         with open(f"router_{posicion_llegada}.txt", "a") as file:
             file.write(f"Origen: ROUTER_{posicion_origen}\n{mensaje}\n")
-            
-class ListaRouters():
-    def __init__(self):
-        self.head = None
-        self.len = 0   
-    def agregarrouter(self, router:Router):
-        if (self.len) ==0:
-            self.head = router
-        else:
-            router.prox = self.head
-            self.head = router 
-        self.len += 1
-    def append(self, router:Router):
-        if (self.len == 0):
-            self.head = router
-        else:
-            routertrans=Router()
-            routertrans=self.head
-            while (routertrans.prox != None):
-                routertrans = routertrans.prox
-            routertrans.prox = router
-        self.len += 1
-    def pop(self, posicion = None):
-        router = Router()
-        router = self.head
-        if posicion == None:
-            final = self.len-2
-            for i in range (posicion - 1):
-                router = router.prox
-                router.prox = None
-        else:
-            for i in range(posicion-1):
-                router = router.prox
-                router.prox = router.prox.prox
-        self.len -= 1
+    
     def __str__(self):
-        router = self.head
-        cadena = ""      
-        if (self.len == 0):
-            return "Lista Vacia"
-        else:
-            while router != None:
-                router += str(router.dato) + "\t"
-                router = router.prox
-            return cadena
+        return f"ROUTER_{self.posicion}"
+            
+class Diccionario_Routers:
+    
+    def __init__(self):
+        self.dict = {}
+    
+    def agregar_routers (self, cantidad):
+        for i in range(1,cantidad+1):
+            router = Router(i)
+            router.activar_router()
+            self.dict[router]=[]
+        
+    def crear_paquete (self, contenido, origen, destino):
+        """Input: ...\n
+        Funcion: Crea un paquete de informacion con el mensaje deseado\n
+        Output: Nada"""
+        paquete = Paquete(contenido, origen, destino)
+        for router in self.dict.keys():
+            if router.posicion == origen and router.estado == "ACTIVO":
+                lista = self.dict[router] 
+                lista.append(paquete)
+                self.dict[router] = lista
+                
+    def enviar_paquete (self):
+        """Input: ...\n
+        Funcion: Manda un paquete al proximo Router\n
+        Output: Nada"""
+        for router in self.dict.keys():
+            if router.estado == "ACTIVO":
+                for paquetes in self.dict.values():
+                    for paquete in paquetes:
+                        if paquete.destino != router.posicion:
+                            lista = self.dict[router] 
+                            lista.remove(paquete)
+                            self.dict[router] = lista
+                            posicion_proximo = router.posicion + 1
+                            for router in self.dict.keys():
+                                if router.posicion == posicion_proximo:
+                                    lista = self.dict[router] 
+                                    lista.append(paquete)
+                                    self.dict[router] = lista
+                        
+    def recibir_paquete (self, paquete):
+        """Input: ...\n
+        Funcion: Recibir un paquete\n
+        Output: Nada"""
+        self.paquetes_en_cola.append(paquete)  
+               
+    def procesar_paquete (self):
+        """Input: ...\n
+        Funcion: Procesar un paquete de informacion\n
+        Output: True/Nada"""
+        for paquete in self.paquetes_en_cola:
+            if paquete.destino == self.posicion:
+                print("Llegó a destino")
+            else:
+                self.enviar_paquete()
+        time.sleep(0.1) # Con esto hacemos la latencia
+        
+diccionario = Diccionario_Routers()
+diccionario.agregar_routers(5)
+diccionario.crear_paquete("hola que tal", 3,4)
+diccionario.enviar_paquete()
+for i in diccionario.dict.items():
+    print(i) 

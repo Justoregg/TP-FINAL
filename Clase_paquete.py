@@ -3,4 +3,5 @@ class Paquete:
         self.mensaje = mensaje
         self.origen = origen
         self.destino = destino
+        self.llegada_a_destino = False
         
