@@ -55,12 +55,12 @@ class Router:
                 self.latencia -=1
             elif self.paquetes_en_cola:
                 paquete = self.paquetes_en_cola.pop(0)
-                time.sleep(1) # Con esto hacemos la latencia
+                time.sleep(0,1) # Con esto hacemos la latencia
                 if paquete.destino == self.posicion:
                     return True
                 else:
                     self.enviar_paquete(paquete)
-                    proximo_router = routers[self.posicion + 1]
+                    proximo_router = routers[self.posicion + 1]    ## La lista de routers esta en simulacion, por eso el error
                     proximo_router.recibir_paquete(paquete)
                     
     @staticmethod
