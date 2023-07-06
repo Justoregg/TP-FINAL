@@ -14,7 +14,7 @@ class Router:
         
     def enviar_paquete (self, contenido, origen, destino):
         """Input: Objeto router, Contenido del mensaje (String)\n
-        Funcion: Enviar un paquete de informacion con el mensaje deseado al proximo nodo\n
+        Funcion: Enviar un paquete de informacion con el mensaje deseado al proximo Router\n
         Output: Nada"""
         if self.estado == "ACTIVO":
             paquete = Paquete(contenido, origen, destino)
@@ -77,8 +77,52 @@ class Router:
     @staticmethod
     def generar_txt (posicion_llegada, mensaje, posicion_origen):
         """Input: Posicion de destino del mensaje (Int), mensaje (String), posicion de origen del mensaje (Int)\n
-        Funcion: Generar un archivo de texto en el cual se visualice el mensaje enviado desde un nodo a otro\n
+        Funcion: Generar un archivo de texto en el cual se visualice el mensaje enviado desde un Router a otro\n
         Output: Nada"""
         with open(f"router_{posicion_llegada}.txt", "a") as file:
             file.write(f"Origen: ROUTER_{posicion_origen}\n{mensaje}\n")
-
+            
+class ListaRouters():
+    def __init__(self):
+        self.head = None
+        self.len = 0   
+    def agregarrouter(self, router:Router):
+        if (self.len) ==0:
+            self.head = router
+        else:
+            router.prox = self.head
+            self.head = router 
+        self.len += 1
+    def append(self, router:Router):
+        if (self.len == 0):
+            self.head = router
+        else:
+            routertrans=Router()
+            routertrans=self.head
+            while (routertrans.prox != None):
+                routertrans = routertrans.prox
+            routertrans.prox = router
+        self.len += 1
+    def pop(self, posicion = None):
+        router = Router()
+        router = self.head
+        if posicion == None:
+            final = self.len-2
+            for i in range (posicion - 1):
+                router = router.prox
+                router.prox = None
+        else:
+            for i in range(posicion-1):
+                router = router.prox
+                router.prox = router.prox.prox
+        self.len -= 1
+    def __str__(self):
+        router = self.head
+        cadena = ""      
+        if (self.len == 0):
+            return "Lista Vacia"
+        else:
+            while router != None:
+                router += str(router.dato) + "\t"
+                router = router.prox
+            return cadena

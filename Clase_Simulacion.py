@@ -1,19 +1,22 @@
 from Clase_Router import *
+from Listas_enlasadas import *
 
 class Routing_Sim:
     
     def __init__(self, tiempo_a_simular):
         self.tiempo_a_simular = tiempo_a_simular
-        self.routers = []
+        self.routers = Lista()
         
-    def agregar_routers(self, cantidad_de_routers):
-        """Input: Objeto simulacion, cantidad de routers deseados (Int)\n
-        Funcion: Agregar routers a la simulacion\n
-        Output: Nada"""
-        for i in range(1, int(cantidad_de_routers)+1):
-            router = Router(i)
-            Router.actualizar_csv("AGREGADO", "System_log.csv", i)
-            self.routers.append(router)
+    # def agregar_routers(self, cantidad_de_routers):
+    #     """Input: Objeto simulacion, cantidad de routers deseados (Int)\n
+    #     Funcion: Agregar routers a la simulacion\n
+    #     Output: Nada"""
+    #     for i in range(1, int(cantidad_de_routers)+1):
+    #         #cada router es un nodo 
+    #         router = Nodo               #Router(i)
+    #         Router.actualizar_csv("AGREGADO", "System_log.csv", i)
+    #         self.routers.append(router)
+    
             
     def iniciar_simulacion (self, destino_final, mensaje, origen):
         """Input: Objeto simulacion, destino final del mensaje (Int), mensaje (String), origen del mensaje (Int)\n
