@@ -1,8 +1,7 @@
-# Hacer las validaciones necesarias...
+from string import *
 
 def validacion_Router(num_router):
-    
-    if isinstance(int(num_router))== True:
+    if num_router.isdigit() == True:
         return True
     else:
         return False
