@@ -15,7 +15,7 @@ class ListaRouters():
             self.head = router 
         self.len += 1
         
-    def append(self, router:Router):
+    def append_router(self, router:Router):
         if (self.len == 0):
             self.head = router
         else:
@@ -24,7 +24,6 @@ class ListaRouters():
             while (routertrans.prox != None):
                 routertrans = routertrans.prox
             routertrans.prox = router
-        router.posicion += 1
         self.len += 1
         
     def pop(self, posicion = None):
@@ -40,8 +39,20 @@ class ListaRouters():
                 router = router.prox
                 router.prox = router.prox.prox
         self.len -= 1
+    
+    def enviar_mensaje(self,mensaje):   #Completarlo bien
+        routertrans=mensaje.origen
+        while routertrans!=mensaje.destino:
+            if routertrans.estado=="ACTIVO":
+                routertrans.recibir_mensaje()
+                routertrans.enviar_mensaje()
+            else:
+                #Hay que hacer el bypass acá
+                pass
+            routertrans=routertrans.prox
+        routertrans.finalizar_mensaje(mensaje)
         
-    def __str__(self):
+    def __str__(self):  #Hace falta?
         router = self.head
         cadena = " "      
         if (self.len == 0):

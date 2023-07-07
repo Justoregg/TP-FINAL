@@ -5,7 +5,7 @@ class Routing_Sim:
     def __init__(self, tiempo_a_simular):
         self.tiempo_a_simular = tiempo_a_simular
             
-    def iniciar_simulacion (self, destino_final, mensaje, origen):
+    def iniciar_simulacion (self):
         """Input: Objeto simulacion, destino final del mensaje (Int), mensaje (String), origen del mensaje (Int)\n
         Funcion: Iniciar la simulacion del programa\n
         Output: Nada"""
@@ -26,4 +26,4 @@ class Routing_Sim:
 ############ PRUEBAS DE FUNCIONAMIENTO ########### 
 
 simulacion = Routing_Sim(10)
-simulacion.iniciar_simulacion(3,"hola que tal",1) 
+simulacion.iniciar_simulacion()
