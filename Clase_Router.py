@@ -1,6 +1,6 @@
 from Clase_paquete import *
 from datetime import *
-import time
+#import time 
 import csv
 import random 
 
@@ -25,6 +25,8 @@ class Router:
         if self.estado != "ACTIVO":
             Router.routers_activos.add(self.posicion)
             self.estado = "ACTIVO"
+        else:
+            return "El router ya se encuentra activo"
             
     def deactivar_router (self):
         """Input: Objeto router\n
@@ -33,12 +35,15 @@ class Router:
         if self.estado != "INACTIVO":
             Router.routers_activos.discard(self.posicion)
             self.estado = "INACTIVO"
+        else:
+            return "El router ya se encuentra inactivo"
     
     def resetear_router (self):
         """Input: Objeto router\n
-        Funcion: Resetear un router\n
-        Output: Nada"""
+        Funcion: Resetear un router\n               #(DEJAR PARA DESPUES, MUY DIFICIL) aleatoriamente el router al recibir un mensaje, puede fallar
+        Output: Nada"""                             # en estos casos, el mensaje debera altear este router y el router se debera resetear automaticamente
         self.latencia = random.randint(5,10)
+        
     
     def recibir_mensaje (self):
         self.mensajes_retransmitidos += 1
