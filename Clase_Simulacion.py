@@ -1,5 +1,5 @@
-from Clase_Lista_Routers import *
-# from threading import * 
+from Clase_Lista_Routers import * 
+from random import *
 
 class Routing_Sim:
     
@@ -11,8 +11,26 @@ class Routing_Sim:
         Funcion: Iniciar la simulacion del programa\n
         Output: Nada"""
         
-        #Creo nodos, lista
-        time.sleep() 
+        #Automatisacion, crea los routers y los activa/desactiva aleatoriamente 
+        #Problema: nose cual es el nombre de cada router 
+        #Funciona
+        inicio = time.time()
+        lista = ListaRouters()
+        cant_routers = randint(3,5)
+        archivo = "System_log"
+        for i in range(cant_routers):
+            router = Router()
+            router.actualizar_csv(archivo)
+            if 2 == randint(1,4):
+                router.desactivar_router()
+            else:
+                router.activar_router()
+            router.actualizar_csv(archivo)
+            lista.agregar_router(router)
+            
+        
+        #Creo nodos, lista         
+        """ time.sleep() 
         router1= Router()
         router1.actualizar_csv("System_log.csv")
         router1.desactivar_router()
@@ -40,7 +58,7 @@ class Routing_Sim:
             router1.generar_txt()
             router2.generar_txt()
             router3.generar_txt()
-            print("Simulacion finalizada")
+            print("Simulacion finalizada") """
          
     @staticmethod
     def ver_paquete (destino, mensaje, origen):
@@ -51,5 +69,6 @@ class Routing_Sim:
 
 ############ PRUEBAS DE FUNCIONAMIENTO ########### 
 
+            
 simulacion = Routing_Sim(0.001)
 simulacion.iniciar_simulacion()
