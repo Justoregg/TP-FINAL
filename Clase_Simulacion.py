@@ -11,24 +11,41 @@ class Routing_Sim:
         Funcion: Iniciar la simulacion del programa\n
         Output: Nada"""
         
-        #Automatisacion, crea los routers y los activa/desactiva aleatoriamente 
-        #Problema: nose cual es el nombre de cada router 
-        #Funciona
+        #Automatisacion, crea los routers y los activa/desactiva aleatoriamente (falta retocar bastante)
         inicio = time.time()
+        #Creo los routers
         lista = ListaRouters()
-        cant_routers = randint(3,5)
+        cant_routers = int(input("Inserte cantidad de routers"))
         archivo = "System_log"
+        routers = []
         for i in range(cant_routers):
-            router = Router()
-            router.actualizar_csv(archivo)
+            nombre_router = "router"+str(i)
+            routers.append(nombre_router)
+            routers[i] = Router()
+            routers[i].actualizar_csv(archivo)
             if 2 == randint(1,4):
-                router.desactivar_router()
+                routers[i].desactivar_router()
             else:
-                router.activar_router()
-            router.actualizar_csv(archivo)
-            lista.agregar_router(router)
+                routers[i].activar_router()
+            routers[i].actualizar_csv(archivo)
+            lista.agregar_router(routers[i])
             
-        
+        #crea los mensajes
+        cantidad_mensajes = int(input("ingrese cantidad de mensajes"))
+        mensajes = []
+        for i in range(cantidad_mensajes+1):
+            nombre_variable = "mensaje" + str(i)      
+            mensajes.append(nombre_variable)
+            mensajes[i] = Paquete()                     # por alguna razon, cuando ejectuto, lo primero que se corre es la clase paquete y luego no se realiza correctamente el ciclo for
+            
+        envios = []    
+        for i in range(cantidad_mensajes+1):
+            
+            envioXrouter = routers[mensajes[i].posicion_origen] 
+            envios.append(envioXrouter)
+            envios[i].enviar_paquete(mensajes[i])
+                
+                
         #Creo nodos, lista         
         """ time.sleep() 
         router1= Router()
