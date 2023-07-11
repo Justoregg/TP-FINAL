@@ -1,9 +1,8 @@
 from datetime import * 
-from Validaciones import *
 from random import *
 
 class Paquete:
-    def __init__(self, mensaje = input("ingrese el mensaje"), posicion_origen = int(input("ingrese origen")), posicion_destino = int(input("ingrese destino"))):
+    def __init__(self, mensaje , posicion_origen , posicion_destino ):
         self.mensaje = mensaje
         self.posicion_origen = posicion_origen
         self.posicion_destino = posicion_destino
@@ -22,7 +21,7 @@ def generar_mensaje():
     mensaje = choice(mensajes)  
     return mensaje         
                 
-                
+              
         
         
 

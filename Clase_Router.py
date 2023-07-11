@@ -3,6 +3,10 @@ from datetime import *
 import time 
 import csv
 import random 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Router:
     cantidad_routers = 1 
@@ -44,10 +48,7 @@ class Router:
         """Input: Objeto router\n
         Funcion: Resetear un router\n              
         Output: Nada"""                             
-        if self.estado != "ACTIVO" and self.estado != "INACTIVO":
-            self.estado = "EN RESET"
-        else:
-            return "El router se está reseteando"
+        self.estado = "EN RESET"
         
     def recibir_mensaje (self, paquete):
         """Input: Objeto router, objeto paquete\n
@@ -76,7 +77,7 @@ class Router:
             else:
                 self.anterior.recibir_mensaje(paquete)
         else:
-            print("No puede enviar mensajes desde un router inactivo")
+            return "No puede enviar mensajes desde un router inactivo"
             
     def finalizar_mensaje (self, mensaje):
         """Input objeto router, objeto paquete\n
@@ -84,6 +85,14 @@ class Router:
         Output: nada"""
         self.lista_mensajes_en_destino.append(mensaje)
         self.mensajes_en_destino += 1
+    
+    def chequear_latencia(self):
+        """Input: objeto router
+        Funcion: verifica que la latencia sea valida
+        Output: nada"""
+        dif_tiempo=time.time() - self.latencia
+        if dif_tiempo < 0.1:
+            time.sleep(0.1-dif_tiempo)
     
     def actualizar_csv (self, archivo):
         """Input: Estado del router (String), Archivo csv, Posicion del router (Int)\n
@@ -104,6 +113,6 @@ class Router:
                 file.write(paquete.__str__())
             for paquete in self.lista_mensajes_por_router:
                 file.write(paquete.__str__())
-            
+                
     def __str__(self):
         return f"ROUTER_{self.posicion}"
